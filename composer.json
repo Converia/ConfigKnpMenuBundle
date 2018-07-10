@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Configure your knp menus with yaml files accross your project bundles",
     "keywords": ["Knp", "UI", "User Interface", "Menu", "Navigation", "Symfony"],
-    "homepage": "https://github.com/jbouzekri/ConfigKnpMenuBundle",
+    "homepage": "https://github.com/Converia/ConfigKnpMenuBundle",
     "license": "MIT",
     "require": {
         "knplabs/knp-menu-bundle": "^2.0",
