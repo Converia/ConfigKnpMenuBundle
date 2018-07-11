@@ -33,25 +33,24 @@ class JbConfigKnpMenuExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuredMenus = array();
-        if (is_file($file = $container->getParameter('kernel.root_dir') . '/../config/navigation.yml')) {
+
+		//symfony 4 configuration path
+		$file = $container->getParameter('kernel.project_dir') . '/config/navigation.yml';
+		if (!is_file($file)) {
+			//symfony 3 configuration path fallback
+			$file = $container->getParameter('kernel.root_dir') . '/config/navigation.yml';
+		}
+        if (is_file($file)) {
             $configuredMenus = $this->parseFile($file);
             $container->addResource(new FileResource($file));
         }
-
         foreach ($container->getParameter('kernel.bundles') as $bundle) {
-            $reflection = new \ReflectionClass($bundle);
-            //symfony 4
-            if (is_file($file = dirname($reflection->getFileName()) . '/Resources/config/navigation.yml')) {
-                $configuredMenus = array_replace_recursive($configuredMenus, $this->parseFile($file));
-                $container->addResource(new FileResource($file));
-            }
-            //symfony 3
-            if (is_file($file = $container->getParameter('kernel.root_dir') . '/config/navigation.yml')) {
-            $configuredMenus = $this->parseFile($file);
-            $container->addResource(new FileResource($file));
-        }
-        }
-
+			$reflection = new \ReflectionClass($bundle);
+			if (is_file($file = dirname($reflection->getFileName()) . '/Resources/config/navigation.yml')) {
+				$configuredMenus = array_replace_recursive($configuredMenus, $this->parseFile($file));
+				$container->addResource(new FileResource($file));
+			}
+		}
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
