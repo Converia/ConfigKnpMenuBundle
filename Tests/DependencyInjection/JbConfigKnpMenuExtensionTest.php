@@ -50,7 +50,8 @@ class JbConfigKnpMenuExtensionTest extends \PHPUnit_Framework_TestCase
                 'JbTest2Bundle' =>
                     'Jb\\Bundle\\ConfigKnpMenuBundle\\Tests\\DependencyInjection\\Fixtures\\Bundle2\\JbTest2Bundle'
             ),
-            'kernel.root_dir' => 'app'
+            'kernel.root_dir' => 'app',
+            'kernel.project_dir' => 'app'
         ), $data)));
 
         return $container;
