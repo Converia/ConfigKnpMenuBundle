@@ -152,8 +152,8 @@ class ConfigurationMenuProvider implements MenuProviderInterface
     {
         $item = $this->factory->createItem($name, $configuration);
         // If no rights granted. Do not display item.
-        if (!$this->isGranted($configuration, $item)) {
-            $parentItem->addChild($name, $configuration);
+        if ($this->isGranted($configuration, $item)) {
+            $parentItem->addChild($item);
             // Recursive loop for appending children menu items
             if (!empty($configuration['children'])) {
                 $this->sortItems($configuration['children']);
