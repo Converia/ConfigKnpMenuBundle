@@ -15,7 +15,6 @@ namespace Jb\Bundle\ConfigKnpMenuBundle\Provider;
 
 use Jb\Bundle\ConfigKnpMenuBundle\Event\ConfigureMenuEvent;
 use Knp\Menu\FactoryInterface;
-use Knp\Menu\ItemInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -124,6 +123,10 @@ class ConfigurationMenuProvider implements MenuProviderInterface
 
         // Append item recursively to root
         foreach ($this->configuration[$name]['tree'] as $key => $childConfiguration) {
+            // If no rights granted. Do not display item.
+            if (!$this->isGranted($childConfiguration)) {
+                continue;
+            }
             $this->createItem($menu, $key, $childConfiguration);
         }
 
@@ -150,20 +153,19 @@ class ConfigurationMenuProvider implements MenuProviderInterface
      */
     protected function createItem($parentItem, $name, $configuration)
     {
-        $item = $this->factory->createItem($name, $configuration);
-        // If no rights granted. Do not display item.
-        if ($this->isGranted($configuration, $item)) {
-            $parentItem->addChild($item);
-            // Recursive loop for appending children menu items
-            if (!empty($configuration['children'])) {
-                $this->sortItems($configuration['children']);
-                foreach ($configuration['children'] as $childName => $childConfiguration) {
-                    $this->createItem($item, $childName, $childConfiguration);
+        $item = $parentItem->addChild($name, $configuration);
+
+        // Recursive loop for appending children menu items
+        if (!empty($configuration['children'])) {
+            $this->sortItems($configuration['children']);
+            foreach ($configuration['children'] as $childName => $childConfiguration) {
+                // If no rights granted. Do not display item.
+                if (!$this->isGranted($childConfiguration)) {
+                    continue;
                 }
+                $this->createItem($item, $childName, $childConfiguration);
             }
         }
-
-
     }
 
     /**
@@ -234,11 +236,12 @@ class ConfigurationMenuProvider implements MenuProviderInterface
 
     /**
      * Check if security context grant rights on menu item
+     *
      * @param array $configuration
-     * @param ItemInterface $menuItemName
-     * @return bool
+     *
+     * @return boolean
      */
-    protected function isGranted(array $configuration, ItemInterface $menuItem)
+    protected function isGranted(array $configuration)
     {
         // If no role configuration. Grant rights.
         if (!isset($configuration['roles'])) {
@@ -252,7 +255,7 @@ class ConfigurationMenuProvider implements MenuProviderInterface
 
         // Check if one of the role is granted
         foreach ($configuration['roles'] as $role) {
-            if ($this->authorizationChecker->isGranted($role,$menuItem)) {
+            if ($this->authorizationChecker->isGranted($role)) {
                 return true;
             }
         }

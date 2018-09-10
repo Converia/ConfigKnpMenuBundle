@@ -7,7 +7,6 @@ namespace Jb\Bundle\ConfigKnpMenuBundle\Tests\Provider;
 
 use Jb\Bundle\ConfigKnpMenuBundle\Provider\ConfigurationMenuProvider;
 use Jb\Bundle\PhumborBundle\Tests\DependencyInjection\JbConfigKnpMenuExtensionTest;
-use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuFactory;
 use Knp\Menu\Integration\Symfony\RoutingExtension;
 
@@ -184,13 +183,7 @@ class ConfigurationMenuProviderTest extends \PHPUnit_Framework_TestCase
     public function testWithRolesNotGranted()
     {
         $this->authorizationChecker
-            ->expects($this->once())
             ->method('isGranted')
-
-            ->with(
-                $this->stringStartsWith('ROLE_USER'),
-                $this->isInstanceOf(ItemInterface::class)
-            )
             ->willReturn(false);
 
         $menu = $this->configurationProvider->get('menu_roles');
@@ -207,13 +200,7 @@ class ConfigurationMenuProviderTest extends \PHPUnit_Framework_TestCase
     public function testWithRolesGranted()
     {
         $this->authorizationChecker
-            ->expects($this->once())
             ->method('isGranted')
-
-            ->with(
-                $this->stringStartsWith('ROLE_USER'),
-                $this->isInstanceOf(ItemInterface::class)
-            )
             ->willReturn(true);
 
         $menu = $this->configurationProvider->get('menu_roles');
