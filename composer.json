@@ -20,5 +20,6 @@
     },
     "autoload-dev": {
         "psr-4": {"Jb\\Bundle\\ConfigKnpMenuBundle\\Tests\\": "Tests/"}
-    }
+    },
+    "abandoned": "jbouzekri/config-knp-menu-bundle"
 }

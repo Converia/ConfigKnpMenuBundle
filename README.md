@@ -1,4 +1,8 @@
-ConfigKnpMenuBundle
+DEPRECATED - ConfigKnpMenuBundle
+===================
+
+PACKAGE ABANDONED - use `jbouzekri/config-knp-menu-bundle` instead
+
 ===================
 
 [![Build Status](https://travis-ci.org/jbouzekri/ConfigKnpMenuBundle.svg?branch=master)](https://travis-ci.org/jbouzekri/ConfigKnpMenuBundle)
