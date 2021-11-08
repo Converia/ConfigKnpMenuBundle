@@ -120,7 +120,9 @@ class ConfigurationMenuProvider implements MenuProviderInterface
         }
 
         // Sort first level of items
-        $this->sortItems($this->configuration[$name]['tree']);
+		if (isset($this->configuration[$name]['tree'])) {
+			$this->sortItems($this->configuration[$name]['tree']);
+		}
 
         // Append item recursively to root
         foreach ($this->configuration[$name]['tree'] as $key => $childConfiguration) {
